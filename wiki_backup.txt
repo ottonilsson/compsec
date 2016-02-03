@@ -1,0 +1,104 @@
+# Commands and comments (linux)
+
+## 2.1 - Certificates, keystores and truststores
+Create a private key:  
+`openssl genrsa -out ca.key 1024`  
+Saved as: _ca.key_
+
+**2.1.1** - Create a CA certificate:  
+`openssl req -new -x509 -key ca.key -out ca.crt -subj “/C=SE/L=Lund/O=LTH/CN=CA”`  
+Saved as: _ca.crt_
+
+**Answer to Question A**  
+“-CAcreateserial” is a signing option that can be used the first time a CA is used to sign a certificate. It creates a serial number file (.srl, if it doesn’t already exist) containing a serial number.
+The next time the CA is used to sign a certificate “-CAserial” is used instead to add information to the serial number file.
+
+
+**2.1.2** - Create a client-side truststore containing the CA certificate:  
+`keytool -import -file ca.crt -keystore clienttruststore -storepass password -noprompt`  
+> Ok to use a keystore as a truststore? See Hint 3..  
+Saved as: _clienttruststore_
+
+**2.1.3** - Create an end-user key pair and a client-side keystore to store them in:   
+`keytool -genkeypair -dname "CN=stil_1/stil_2/stil_3/stil_4" -alias studentkey -keypass password -keystore clientkeystore -storepass password`  
+> Change to our Stil-IDs  
+Saved as: _clientkeystore_
+
+**2.1.4** - Create a Certificate Signing Request (CSR) for the key pair:  
+`keytool -certreq -file lth.csr -alias studentkey -keystore clientkeystore -storepass password`  
+Saved as: _lth.csr_
+
+**2.1.5** - Sign the CSR with the CA certificate:  
+`openssl x509 -req -in lth.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out lth.crt`  
+Saved as: _lth.crt_  
+Created a serial number file: _ca.srl_
+
+**2.1.6** - Import the certificate chain into the keystore:  
+`keytool -importcert -alias cakey -file ca.crt -keystore clientkeystore -storepass password -noprompt`  
+`keytool -importcert -alias studentkey -trustcacerts -file lth.crt -keystore clientkeystore -storepass password -noprompt`
+
+**2.1.7** - Verify that a certificate chain has been established:  
+`keytool -list -v -keystore clientkeystore -storepass password`
+
+**2.1.8** - :  
+**Answer to Question B** 
+Extenstions is what distinguish version 3 from version 2 and 1. 
+By marking extensions as "critical" with keytool, version 3 certificates can be enforced.
+OpenSSL can add extensions that require version 3 to be used.
+
+**Answer to Question C**  
+Extensions are extra options to a certificate that can be used to restrict usage, specify alternative names etc.
+
+**2.1.9** - Create server-side keystore:  
+`keytool -genkeypair -dname "CN=MyServer" -alias studentkey2 -keypass password -keystore serverkeystore -storepass password`  
+`keytool -certreq -file lth.csr -alias studentkey2 -keystore serverkeystore -storepass password`  
+`openssl x509 -req -in lth.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out lth.crt`  
+`keytool -importcert -alias cakey2 -file ca.crt -keystore serverkeystore -storepass password -noprompt`  
+`keytool -importcert -alias studentkey2 -trustcacerts -file lth.crt -keystore serverkeystore -storepass password -noprompt`
+> Better aliases?
+
+**2.1.10** - Create a server-side truststore:  
+`keytool -importkeystore -srckeystore clienttruststore -destkeystore servertruststore -srcstorepass password -deststorepass password`  
+
+**Answer to Question D**  
+Yes, since they both need to contain the same CA certificate.
+
+**2.1.11** - :  
+**Answer to Question E**  
+The truststore passwords protect the trusted certificates from being manipulated and prevents new ones to be added.  
+The keystore passwords protect all the keys and the key password protect the single private key.
+
+## 2.2 - TLS connection
+
+**2.2.1** - Compiling the source code:  
+javac server.java client.java
+
+**2.2.2** - Starting the server and client:  
+java server 9876  
+java client localhost 9876
+
+**2.2.3** - :  
+**Answer to Question F**  
+The server replies with the sent text backwards.
+
+**2.2.4** - Adding issuer line:  
+Adding two new lines to client.java and server.java  
+`String issuer = cert.getIssuerDN().getName();`  
+`System.out.println("issuer:\n" + issuer+ "\n");`  
+
+**2.2.5** - Adding serial number line:  
+Added three new lines to client.java and server.java  
+`import java.math.*;`  
+`BigInteger bsn = cert.getSerialNumber();`  
+`System.out.println("serial number: " + bsn);`  
+
+**2.2.6** - Setting up a TLS connection using own certificates:  
+Copying the java files to directory for own certificates and running the code from 2.2.1 and 2.2.2.
+
+**2.2.7** - :  
+**Answer to Question G**  
+setNeedClientAuth(true) makes the server require client authentication.
+
+**2.2.8** - Printouts:  
+**Answer to Question H**  
+

@@ -36,9 +36,11 @@ public class client {
 
         try { /* set up a key manager for client authentication */
             SSLSocketFactory factory = null;
-            try {
-                char[] password = "password".toCharArray();
-                KeyStore ks = KeyStore.getInstance("JKS");
+			try {
+				System.out.print("PASSWORD: ");
+				char[] password = System.console().readPassword();
+				// char[] password = "password".toCharArray();
+				KeyStore ks = KeyStore.getInstance("JKS");
                 KeyStore ts = KeyStore.getInstance("JKS");
                 KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
                 TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");

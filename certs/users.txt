@@ -1,0 +1,16 @@
+Format: user:password
+--------------
+
+patient_1:patientpwd_1
+patient_2:patientpwd_2
+patient_3:patientpwd_3
+
+nurse_1:nursepwd_1
+nurse_2:nursepwd_2
+nurse_3:nursepwd_3
+
+doctor_1:doctorpwd_1
+doctor_2:doctorpwd_2
+doctor_3:doctorpwd_3
+
+govagency:govagencypwd

@@ -78,6 +78,8 @@ public class server implements Runnable {
         }
     }
 
+    private void session() {}
+
     private static ServerSocketFactory getServerSocketFactory(String type) {
         if (type.equals("TLS")) {
             SSLServerSocketFactory ssf = null;

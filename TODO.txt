@@ -1,0 +1,4 @@
+== TODO ==
+* add equals methods to Person classes
+* implement action methods in Record
+* other stuff

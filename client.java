@@ -41,7 +41,6 @@ public class client {
 			try {
 				System.out.print("PASSWORD: ");
 				char[] password = System.console().readPassword();
-				char[] trustpassword = "password".toCharArray();
 				KeyStore ks = KeyStore.getInstance("JKS");
 				KeyStore ts = KeyStore.getInstance("JKS");
 				KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
@@ -56,7 +55,7 @@ public class client {
 					System.out.println("wrong password");	
 					return;
 				}											// (storepass)
-					ts.load(new FileInputStream("clienttruststore"), trustpassword); // truststore
+					ts.load(new FileInputStream("clienttruststore"), password); // truststore
 					// password
 					// (storepass);
 					kmf.init(ks, password); // user password (keypass)

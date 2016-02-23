@@ -1,4 +1,7 @@
+package data;
+
 import java.time.Clock;
+
 // Singleton implementation of the audit log
 public class Log {
     private static Log instance = null;
@@ -16,11 +19,11 @@ public class Log {
         return instance;
     }
 
-    public boolean log(Person subject, Action action, Record record) {
+    public void log(Person subject, Action action, Record record) {
         String eventString = clock.millis() + ": " +
             subject.name + " " + action.verb +
             " record in division " + record.division +
             ", concerning " + patient.name;
-        return events.add(eventString);
+        events.add(eventString);
     }
 }

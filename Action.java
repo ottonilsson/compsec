@@ -1,3 +1,5 @@
+package data;
+
 public enum Action {
     Read    ("read from", "r: Read"),
     Write   ("wrote to", "w: Write"),
@@ -5,8 +7,8 @@ public enum Action {
     Delete  ("deleted", "d: Delete"),
     Audit   ("audited", "a: Audit (print log)");
 
-    final String verb,
-                 msg;
+    public final String verb,
+                        msg;
 
     Action(String verb, String msg) {
         this.verb = verb;

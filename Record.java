@@ -1,8 +1,10 @@
+package data;
+
 public class Record {
-    final Person patient;
-    final Doctor doctor;
-    final Nurse nurse;
-    final int division;
+    public final Person patient;
+    public final Doctor doctor;
+    public final Nurse nurse;
+    public final int division;
 
     public Record(int division, Person patient, Doctor doctor, Nurse nurse) {
         this.patient = patient;
@@ -11,31 +13,63 @@ public class Record {
         this.division = division;
     }
 
-    public Set<Action> access(Person subject) {
-        Set<Action> permissions = EnumSet<Action>();
-        if (subject.equals(patient))
-            permissions.add(Action.Read);
-        if (subject instanceof Nurse) {
-            if (subject.division == division) {
-                permissions.add(Action.Read);
-            } else if (subject.equals(nurse) || subject.equals(doctor)) {
-                permissions.add(Action.Read);
-                permissions.add(Action.Write);
-            }
+    public boolean read(Person subject) {
+        return readwrite(subject, Action.Read);
+    }
+    
+    public boolean write(Person subject) {
+        return readwrite(subject, Action.Write);
+    }
+    
+    public boolean delete(Person subject) {
+        if (access(subject, Action.Delete)) {
+            log(subject, Action.Delete);
+            patient.removeNullRefs();
+            nurse.removeNullRefs();
+            doctor.removeNullRefs();
+            this = null;
+            return true;
         }
-        if (subject instanceof Agency) {
-            permissions.add(Action.Read);
-            permissions.add(Action.Delete);
-        }
-        return permissions;
+        return false;
     }
 
-    public void read() {}
-    
-    public void write() {}
-    
-    public void delete() {
-        // log()
-        this = null;
+    private boolean readwrite(Person s, Action a) {
+        if (access(s, a) {
+            log(s, a);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean access(Person subject, Action action) {
+        switch (a) {
+            case Action.Read:
+                if (subject.equals(patient)) {
+                    return true;
+                } else if (subject instanceof Nurse) {
+                    if (subject.division == division)
+                        return true;
+                } else if (subject.equals(nurse) || subject.equals(doctor)) {
+                    return true;
+                } else if (subject instanceof Agency) {
+                    return true;
+                }
+                break;
+            case Action.Write:
+                if (subject.equals(nurse) || subject.equals(doctor))
+                    return true;
+                break;
+            case Action.Delete:
+                if (subject instanceof Agency)
+                    return true;
+                break;
+            default:
+                break; // should throw exception
+        }
+        return false;
+    }
+
+    private void log(Person subject, Action action) {
+        Log.getInstance().log(subject, action, this);
     }
 }

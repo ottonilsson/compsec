@@ -5,6 +5,9 @@ import javax.net.*;
 import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
 import java.math.*;
+import java.util.LinkedList;
+import data.*;
+import users.*;
 
 public class server implements Runnable {
     private ServerSocket serverSocket = null;
@@ -17,7 +20,7 @@ public class server implements Runnable {
 
     public void run() {
         try {
-            SSLSocket socket=(SSLSocket)serverSocket.accept();
+            SSLSocket socket = (SSLSocket) serverSocket.accept();
             newListener();
             SSLSession session = socket.getSession();
             X509Certificate cert = (X509Certificate)session.getPeerCertificateChain()[0];
@@ -31,22 +34,8 @@ public class server implements Runnable {
             System.out.println("serial number: " + bsn);
             System.out.println(numConnectedClients + " concurrent connection(s)\n");
 
-            PrintWriter out = null;
-            BufferedReader in = null;
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            session(subject, socket);
 
-            String clientMsg = null;
-            while ((clientMsg = in.readLine()) != null) {
-			    String rev = new StringBuilder(clientMsg).reverse().toString();
-                System.out.println("received '" + clientMsg + "' from client");
-                System.out.print("sending '" + rev + "' to client...");
-				out.println(rev);
-				out.flush();
-                System.out.println("done\n");
-			}
-			in.close();
-			out.close();
 			socket.close();
     	    numConnectedClients--;
             System.out.println("client disconnected");
@@ -78,7 +67,31 @@ public class server implements Runnable {
         }
     }
 
-    private void session() {}
+    private void session(String subject, SSLSocket socket) {
+        try {
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));	
+            Database db = Database.getInstance();
+            Person user = new Person(subject);
+            for (Person p : db.users()) {
+                if (subject.equals(p.name)) {
+                    user = p;
+                    break;
+                }
+            }
+            char msg;
+            while ((msg = (char) in.read()) != 'q') {
+                System.out.println("recieved '" + msg + "'");
+                out.print(msg);
+                out.flush();
+                System.out.println("done\n");
+            }
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private static ServerSocketFactory getServerSocketFactory(String type) {
         if (type.equals("TLS")) {

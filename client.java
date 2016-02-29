@@ -93,7 +93,7 @@ public class client {
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				for (;;) {
                     String rcv = "";
-					while (rcv.equals("null")) {
+					while (!rcv.equals("null")) {
                         System.out.println(rcv);
                         rcv = in.readLine();
                     }

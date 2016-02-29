@@ -75,11 +75,12 @@ public class Session {
                             Person p;
                             if (selectedPatient != null) {
                                 Nurse nurse = (Nurse) db.nurses().get(index);
-                                accessibleRecords.add(
-                                        db.addRecord(selectedPatient, (Doctor) subject, nurse));
+				Record r = db.addRecord(selectedPatient, (Doctor) subject, nurse);
+                                accessibleRecords.add(r);
                                 creatingRecord = false;
                                 createdMsg = "Record created for " + selectedPatient + ".\n";
                                 selectedPatient = null;
+				Log.getInstance().log(subject, Action.Create, r);
                                 p = nurse;
                             } else {
                                 selectedPatient = db.users().get(index);

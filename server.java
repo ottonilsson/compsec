@@ -12,6 +12,7 @@ import users.*;
 public class server implements Runnable {
     private ServerSocket serverSocket = null;
     private static int numConnectedClients = 0;
+    private Database db = Database.getInstance();
 
     public server(ServerSocket ss) throws IOException {
         serverSocket = ss;
@@ -69,9 +70,8 @@ public class server implements Runnable {
 
     private void session(String subject, SSLSocket socket) {
         try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            PrintWriter out = new PrintWriter(socket.getOutputStream());
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));	
-            Database db = Database.getInstance();
             Person user = new Person(subject);
             for (Person p : db.users()) {
                 if (subject.equals(p.name)) {
@@ -79,12 +79,23 @@ public class server implements Runnable {
                     break;
                 }
             }
-            char msg;
-            while ((msg = (char) in.read()) != 'q') {
-                System.out.println("recieved '" + msg + "'");
-                out.print(msg);
+            Session sesh = new Session(user);
+            System.out.println("Session started for " + user);
+            String msg = "";
+            while (msg != "q") {
+                String prompt = sesh.prompt();
+                System.out.print(prompt);
+                out.println(prompt);
                 out.flush();
-                System.out.println("done\n");
+                System.out.println("prompted.");
+                msg = in.readLine();
+                System.out.println("recieved '" + msg + "'.");
+                if (msg == "q")
+                    break;
+                if (msg != "")
+                    out.println(sesh.cmd(msg));
+                out.flush();
+                System.out.println("done.\n");
             }
             in.close();
             out.close();

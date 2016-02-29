@@ -26,4 +26,12 @@ public class Log {
             ", concerning " + record.patient.name;
         events.add(eventString);
     }
+
+    public String toString() {
+        String log = "";
+        for (String s : events) {
+            log += s + "\n";
+        }
+        return log;
+    }
 }

@@ -7,4 +7,9 @@ public class Nurse extends Person {
         super(name);
         this.division = division;
     }
+
+    @Override
+    public String toString() {
+        return "Nurse " + name + ", division " + division;
+    }
 }

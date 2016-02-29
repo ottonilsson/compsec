@@ -4,14 +4,13 @@ public enum Action {
     Read    ("read from", "r: Read"),
     Write   ("wrote to", "w: Write"),
     Create  ("created", "c: Create"),
-    Delete  ("deleted", "d: Delete"),
-    Audit   ("audited", "a: Audit (print log)");
+    Delete  ("deleted", "d: Delete");
 
     public final String verb,
-                        msg;
+                        cmd;
 
-    Action(String verb, String msg) {
+    Action(String verb, String cmd) {
         this.verb = verb;
-        this.msg = msg;
+        this.cmd = cmd;
     }
 }

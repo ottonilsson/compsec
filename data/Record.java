@@ -30,6 +30,7 @@ public class Record {
             patient.removeRecord(this);
             nurse.removeRecord(this);
             doctor.removeRecord(this);
+            Database.getInstance().removeRecord(this);
             return true;
         }
         return false;
@@ -73,5 +74,20 @@ public class Record {
 
     private void log(Person subject, Action action) {
         Log.getInstance().log(subject, action, this);
+    }
+
+    public String printAccess(Person subject) {
+        String s = "";
+        for (Action a : Action.values()) {
+            if (access(subject, a)) {
+                s += a.cmd + "\n";
+            }
+        }
+        return s;
+    }
+
+    public String toString() {
+        return  "Patient: " + patient + ", Nurse: " + nurse +
+                ", Doctor: " + doctor + "; Division " + division;
     }
 }

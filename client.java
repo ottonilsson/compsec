@@ -88,24 +88,25 @@ public class client {
 				System.out.println("socket after handshake:\n" + socket + "\n");
 				System.out.println("secure connection established\n\n");
 
-				BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
-				PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+				BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+				PrintWriter out = new PrintWriter(socket.getOutputStream());
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				for (;;) {
-					while (in.ready()) {
-                        System.out.println(in.readLine());
+                    String rcv;
+					while ((rcv = in.readLine()) != "") {
+                        System.out.println(rcv);
                     }
-                    System.out.print("> ");
-				    char msg = (char) read.read();	
-					out.print(msg);
+				    String msg = stdin.readLine();
+                    System.out.println("> " + msg);
+					out.println(msg);
 					out.flush();
-                    if (msg == 'q') {
+                    if (msg == "q") {
 						break;
 					}
 				}
 				in.close();
 				out.close();
-				read.close();
+				stdin.close();
 				socket.close();
 			} catch (Exception e) {
 				e.printStackTrace();

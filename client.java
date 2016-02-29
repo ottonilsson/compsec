@@ -92,9 +92,10 @@ public class client {
 				PrintWriter out = new PrintWriter(socket.getOutputStream());
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				for (;;) {
-                    String rcv;
-					while ((rcv = in.readLine()) != "") {
+                    String rcv = "";
+					while (rcv.equals("null")) {
                         System.out.println(rcv);
+                        rcv = in.readLine();
                     }
 				    String msg = stdin.readLine();
                     System.out.println("> " + msg);

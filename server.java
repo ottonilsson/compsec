@@ -70,6 +70,7 @@ public class server implements Runnable {
 
     private void session(String subject, SSLSocket socket) {
         try {
+            subject = subject.substring(3);
             PrintWriter out = new PrintWriter(socket.getOutputStream());
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));	
             Person user = new Person(subject);
@@ -86,6 +87,8 @@ public class server implements Runnable {
                 String prompt = sesh.prompt();
                 System.out.print(prompt);
                 out.println(prompt);
+                out.flush();
+                out.println((String) null);
                 out.flush();
                 System.out.println("prompted.");
                 msg = in.readLine();

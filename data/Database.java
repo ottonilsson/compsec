@@ -38,6 +38,16 @@ public class Database {
         return n;
     }
 
+    public static List<Person> patients() {
+        ArrayList<Person> l = new ArrayList<Person>();
+        for (Person p : users) {
+            if (!(p instanceof Nurse || p instanceof Doctor || p instanceof Agency)) {
+                l.add(p);
+            }
+        }
+        return l;
+    }
+
     public static Record addRecord(Person p, Doctor d, Nurse n) {
         Record r = new Record(d.division, p, d, n);
         p.addRecord(r);

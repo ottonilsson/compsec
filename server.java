@@ -85,7 +85,7 @@ public class server implements Runnable {
             String msg = "";
             while (true) {
                 String prompt = sesh.prompt();
-                System.out.print(prompt);
+                // System.out.print(prompt);
                 out.println(prompt);
                 out.flush();
                 out.println((String) null);

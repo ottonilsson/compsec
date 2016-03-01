@@ -95,7 +95,7 @@ public class Session {
 				                Log.getInstance().log(subject, Action.Create, r);
                                 p = nurse;
                             } else {
-                                selectedPatient = db.users().get(index);
+                                selectedPatient = db.patients().get(index);
                                 p = selectedPatient;
                             }
                             return p + " selected.\n" + createdMsg; 
@@ -136,9 +136,10 @@ public class Session {
         return "Access denied.\n";
     }
 
+    // true = only nurses, false = only patients
     private String printUsers(boolean onlyNurses) {
         String s = "";
-        ArrayList<Person> u = new ArrayList<Person>(onlyNurses ? db.nurses() : db.users());
+        ArrayList<Person> u = new ArrayList<Person>(onlyNurses ? db.nurses() : db.patients());
         for (int i = 0; i < u.size(); i++) {
             s += i + ": " +  u.get(i).toString() + "\n";
         }

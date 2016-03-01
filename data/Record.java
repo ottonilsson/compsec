@@ -68,7 +68,7 @@ public class Record {
                     return true;
                 break;
             default:
-                break; // should throw exception
+                break;
         }
         return false;
     }

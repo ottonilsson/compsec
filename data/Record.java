@@ -50,10 +50,11 @@ public class Record {
                 if (subject.equals(patient)) {
                     return true;
                 } else if (subject instanceof Nurse) {
-                    if (((Nurse) subject).division == division)
+                    if (((Nurse) subject).division == division) {
                         return true;
-                } else if (subject.equals(nurse) || subject.equals(doctor)) {
-                    return true;
+                    } else if (subject.equals(nurse) || subject.equals(doctor)) {
+                        return true;
+                    }
                 } else if (subject instanceof Agency) {
                     return true;
                 }

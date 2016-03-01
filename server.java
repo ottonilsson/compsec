@@ -83,22 +83,21 @@ public class server implements Runnable {
             Session sesh = new Session(user);
             System.out.println("Session started for " + user);
             String msg = "";
-            while (msg != "q") {
+            while (true) {
                 String prompt = sesh.prompt();
                 System.out.print(prompt);
                 out.println(prompt);
                 out.flush();
                 out.println((String) null);
                 out.flush();
-                System.out.println("prompted.");
+                System.out.println("prompted " + user + ".");
                 msg = in.readLine();
-                System.out.println("recieved '" + msg + "'.");
-                if (msg == "q")
+                System.out.println("recieved '" + msg + "' from " + user + ".");
+                if (msg.equals("q"))
                     break;
-                if (msg != "")
-                    out.println(sesh.cmd(msg));
+                out.println(sesh.cmd(msg));
                 out.flush();
-                System.out.println("done.\n");
+                System.out.println("returned to " + user  + ".\n");
             }
             in.close();
             out.close();

@@ -38,6 +38,6 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Patient " + name;
+        return name;
     }
 }

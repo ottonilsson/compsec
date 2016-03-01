@@ -5,8 +5,10 @@ public class Agency extends Person {
         super(name);
     }
 
+    /*
     @Override
     public String toString() {
         return "Agency " + name;
     }
+    */
 }

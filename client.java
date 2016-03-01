@@ -97,13 +97,15 @@ public class client {
                         System.out.println(rcv);
                         rcv = in.readLine();
                     }
-				    String msg = stdin.readLine();
-                    System.out.println("> " + msg);
-					out.println(msg);
+                    String msg = "";
+                    do {
+                        System.out.print("> ");
+				        msg = stdin.readLine();
+                    } while (msg.length() < 1);
+                    out.println(msg);
 					out.flush();
-                    if (msg == "q") {
+                    if (msg.equals("q"))
 						break;
-					}
 				}
 				in.close();
 				out.close();

@@ -15,6 +15,10 @@ public class Session {
         selected = null;
         selectedPatient = null;
         creatingRecord = false;
+        updateAccessibleRecords(); 
+    }
+
+    private void updateAccessibleRecords() {
         if (subject instanceof Agency) {
             accessibleRecords = new ArrayList<Record>(db.records());
         } else {
@@ -31,16 +35,19 @@ public class Session {
     }
 
     public String prompt() {
+        updateAccessibleRecords();
         String s = "";
         if (selected == null && !creatingRecord) {
             s += "Available records: \n";
             for (int i = 0; i < accessibleRecords.size(); i++) {
                 s += i + ": " + accessibleRecords.get(i).toString() + "\n";
             }
+            s += "Available actions: \n";
             s += "a: Audit log\n";
             if (subject instanceof Doctor) {
                 s += Action.Create.cmd + "\n";
             }
+            s += "u: Refresh\n";
             s += "q: Quit\n";
         } else if (creatingRecord && selectedPatient == null) {
             s += printUsers(false);
@@ -49,6 +56,7 @@ public class Session {
             s += printUsers(true);
             s += "Choose nurse: ";
         } else {
+            s += "Working on: " + selected + "\n";
             s += selected.printAccess(subject);
             s += "x: Close record";
         }
@@ -67,6 +75,10 @@ public class Session {
                         return "Creating new record:\n";
                     }
                     break;
+                case 'q':
+                    break;
+                case 'u':
+                    return "";
                 default:
                     try {
                         int index = Integer.parseInt(input);
@@ -75,12 +87,12 @@ public class Session {
                             Person p;
                             if (selectedPatient != null) {
                                 Nurse nurse = (Nurse) db.nurses().get(index);
-				Record r = db.addRecord(selectedPatient, (Doctor) subject, nurse);
+				                Record r = db.addRecord(selectedPatient, (Doctor) subject, nurse);
                                 accessibleRecords.add(r);
                                 creatingRecord = false;
                                 createdMsg = "Record created for " + selectedPatient + ".\n";
                                 selectedPatient = null;
-				Log.getInstance().log(subject, Action.Create, r);
+				                Log.getInstance().log(subject, Action.Create, r);
                                 p = nurse;
                             } else {
                                 selectedPatient = db.users().get(index);
@@ -92,7 +104,7 @@ public class Session {
                         return "Record " + index + " selected.\n";
                     } catch (Exception e) {
                         e.printStackTrace();
-                        return e.getMessage();
+                        return "Invalid option\n";
                     }
             }
         } else {

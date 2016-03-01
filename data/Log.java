@@ -1,6 +1,5 @@
 package data;
 
-import java.time.Clock;
 import java.util.*;
 import users.*; 
 
@@ -20,7 +19,7 @@ public class Log {
     }
 
     public void log(Person subject, Action action, Record record) {
-        String eventString = System.currentTimeMillis() + ": " +
+        String eventString = "[" + time() +  "]\t" +
             subject.name + " " + action.verb +
             " record in division " + record.division +
             ", concerning " + record.patient.name;
@@ -33,5 +32,21 @@ public class Log {
             log += s + "\n";
         }
         return log;
+    }
+
+    private String time() {
+        Calendar cal = Calendar.getInstance();
+        StringBuilder time = new StringBuilder();
+        time.append(cal.get(Calendar.YEAR) + "/");
+        time.append(format(cal.get(Calendar.MONTH)) + "/");
+        time.append(format(cal.get(Calendar.DAY_OF_MONTH)) + " ");
+        time.append(format(cal.get(Calendar.HOUR_OF_DAY)) + ":");
+        time.append(format(cal.get(Calendar.MINUTE)) + ":");
+        time.append(format(cal.get(Calendar.SECOND)));
+        return time.toString();
+    }
+
+    private String format(int n) {
+        return n < 10 ? "0" + n : "" + n;
     }
 }

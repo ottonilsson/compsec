@@ -58,11 +58,12 @@ public class Database {
         u.add(new Person("patient_2"));
         u.add(new Person("patient_3"));
         u.add(new Nurse("nurse_1", 1));
-        u.add(new Nurse("nurse_2", 1));
-        u.add(new Nurse("nurse_3", 2));
+        u.add(new Nurse("nurse_2", 2));
+        u.add(new Nurse("nurse_3", 3));
         u.add(new Doctor("doctor_1", 1));
         u.add(new Doctor("doctor_2", 2));
         u.add(new Doctor("doctor_3", 3));
+        u.add(new Agency("govagency"));
         return u;
     }
 }

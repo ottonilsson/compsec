@@ -1,0 +1,68 @@
+<p><!-- This document is formatted with markdown syntax, the HTML version is preferred for end users. -->
+<strong>Note:</strong> All values denoted with <code>&lt;brackets&gt;</code> should be typed without them.</p>
+
+<h1>Installation</h1>
+
+<h2>Linux/Mac</h2>
+
+<p>Run the 'compile.sh' script.</p>
+
+<h2>Windows</h2>
+
+<p>Translate the 'compile.sh' to a batch script and run that.</p>
+
+<h1>Execution</h1>
+
+<p>Start the server:
+<code>
+    java server &lt;port&gt;
+</code></p>
+
+<p>Connect to the server:
+<code>
+    java client &lt;target host&gt; &lt;port&gt;
+</code></p>
+
+<h1>Usage</h1>
+
+<h2>Server</h2>
+
+<p>The server will print information regarding connected clients in its terminal window.
+New users are created by entering a string formatted in this way into the terminal:</p>
+
+<p><code>
+    &lt;name&gt;:&lt;classID&gt;:&lt;division&gt;
+</code></p>
+
+<ul>
+<li><em>name</em> - any alphanumeric string (<code>a-Z0-9_</code> only, no international characters)</li>
+<li><em>classID</em> - 'p' for patient, 'n' for nurse, 'd' for doctor or 'a' for (government) agency</li>
+<li><em>division</em> - any integer</li>
+</ul>
+
+<p><strong>Example:</strong></p>
+
+<p><code>
+    Mantis Toboggan:d:100
+</code></p>
+
+<p>Will create a user named "Mantis Toboggan", who is a doctor in division 100.</p>
+
+<p>Currently existing users may be listed by typing:</p>
+
+<p><code>
+    users
+</code></p>
+
+<h2>Client</h2>
+
+<p>The keystores to be used when logging in to the server is the <em>clientkeystore</em> and <em>clienttruststore</em> placed in the same directory as the client.class binary executable.</p>
+
+<p>After entering the correct password and connecting to the server, the user is presented with all available actions. Simply entering the letter or number associated with the action (the part to the left of the colon, that is) and pressing enter will tell the server that the user wishes to perform this action.
+When first starting the program, there may not be any records visible. After creating a record, it will show up for any user that has some form of access to the record. Pressing 'u' to update the screen may be necessary if the user has not performed an action after the record being created.</p>
+
+<h2>Test values</h2>
+
+<p>For added convenience when testing the program, 10 example users with associated certificates are included (hard coded) in the program. If one wishes to remove these, one would have to remove or comment out the <em>hardCodedUsers()</em> method in the <em>Database.java</em> source code file and recompile.</p>
+
+<p>The keystores for each test user is in an appropriately named directory inside the certs directory. Running the <em>compile.sh</em> script will make a copy of the client.class binary in each of these folders, to easier facilitate the testing of multiple concurrently connected users.</p>

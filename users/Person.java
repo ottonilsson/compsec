@@ -29,9 +29,8 @@ public class Person {
         if (o != null) {
             if (o == this)
                 return true;
-            if (o instanceof Person) {
+            if (o instanceof Person)
                 return ((Person) o).name.equals(this.name);
-            }
         }
         return false;
     }

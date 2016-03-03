@@ -6,7 +6,8 @@ import java.util.*;
 public class Session {
     Database db = Database.getInstance();
     private ArrayList<Record> accessibleRecords;
-    private Record selected;
+    private Record selected; // if null, user is not accessing a record
+    // if selectedPatient is not null, doctor should select a nurse for the record
     private Person subject, selectedPatient;
     private boolean creatingRecord;
 
@@ -23,7 +24,7 @@ public class Session {
             accessibleRecords = new ArrayList<Record>(db.records());
         } else {
             accessibleRecords = new ArrayList<Record>(subject.getRecords());
-            if (subject instanceof Nurse) {
+            if (subject instanceof Nurse) { // this concerns both doctors and nurses, doctor being a subclass of nurse
                 Nurse n = (Nurse) subject;
                 for (Record r : db.records()) {
                     if (r.division == n.division && !accessibleRecords.contains(r)) {
@@ -78,8 +79,8 @@ public class Session {
                 case 'q':
                     break;
                 case 'u':
-                    return "";
-                default:
+                    return "";  // do nothing and prompt again
+                default: // if a number is entered and user is trying to access a record
                     try {
                         int index = Integer.parseInt(input);
                         if (creatingRecord) {
@@ -107,7 +108,7 @@ public class Session {
                         return "Invalid option\n";
                     }
             }
-        } else {
+        } else { // record is selected
             switch(c) {
                 case 'r':
                     if (selected.read(subject)) {

@@ -11,7 +11,7 @@ public class Database {
     protected Database() {
         records = new ArrayList<Record>();
         // users = new ArrayList<Person>();
-        users = hardCodedUsers();
+        users = hardCodedUsers(); // for convenient testing
     }
 
     public static Database getInstance() {
@@ -41,6 +41,7 @@ public class Database {
     public static List<Person> patients() {
         ArrayList<Person> l = new ArrayList<Person>();
         for (Person p : users) {
+            // necessary because Person (patient) class is also superclass for all other user classes
             if (!(p instanceof Nurse || p instanceof Doctor || p instanceof Agency)) {
                 l.add(p);
             }
@@ -61,7 +62,13 @@ public class Database {
         records.remove(r);
     }
 
-    // hard coded user accounts for testing 
+    public static boolean addUser(Person newUser) {
+        if (!users.contains(newUser))
+            return users.add(newUser);
+        return false;
+    }
+
+    // hard coded user accounts for testing, can be removed
     private ArrayList<Person> hardCodedUsers() {
         ArrayList<Person> u = new ArrayList<Person>();
         u.add(new Person("patient_1"));

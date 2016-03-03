@@ -44,6 +44,7 @@ public class Record {
         return false;
     }
 
+    // access control implementation
     private boolean access(Person subject, Action action) {
         switch (action) {
             case Read:

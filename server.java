@@ -5,7 +5,6 @@ import javax.net.*;
 import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
 import java.math.*;
-import java.util.LinkedList;
 import data.*;
 import users.*;
 
@@ -16,6 +15,7 @@ public class server implements Runnable {
 
     public server(ServerSocket ss) throws IOException {
         serverSocket = ss;
+        (new Thread(new UserCreator())).start(); // handles creation of new users
         newListener();
     }
 
@@ -70,25 +70,24 @@ public class server implements Runnable {
 
     private void session(String subject, SSLSocket socket) {
         try {
-            subject = subject.substring(3);
+            subject = subject.substring(3); // remove first 3 character "CN="
             PrintWriter out = new PrintWriter(socket.getOutputStream());
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));	
-            Person user = new Person(subject);
+            Person user = new Person(subject); // create temporary user
             for (Person p : db.users()) {
                 if (subject.equals(p.name)) {
                     user = p;
                     break;
                 }
             }
-            Session sesh = new Session(user);
+            Session sesh = new Session(user);   // handles all user interaction for the session
             System.out.println("Session started for " + user);
             String msg = "";
             while (true) {
                 String prompt = sesh.prompt();
-                // System.out.print(prompt);
                 out.println(prompt);
                 out.flush();
-                out.println((String) null);
+                out.println((String) null); // terminate text transmission to client
                 out.flush();
                 System.out.println("prompted " + user + ".");
                 msg = in.readLine();
